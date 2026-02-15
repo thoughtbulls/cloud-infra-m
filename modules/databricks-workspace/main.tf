@@ -1,45 +1,21 @@
-data "terraform_remote_state" "network" {
-  backend = "s3"
-
-  config = {
-    bucket = "dp-tf-state-763432567385"
-    key    = "${var.environment}/network/terraform.tfstate"
-    region = "${var.region}"
-  }
-}
-
-
-data "terraform_remote_state" "iam" {
-  backend = "s3"
-
-  config = {
-    bucket = "dp-tf-state-763432567385"
-    key    = "${var.environment}/iam/terraform.tfstate"
-    region = "${var.region}"
-  }
-}
-
-data "terraform_remote_state" "storage" {
-  backend = "s3"
-
-  config = {
-    bucket = "dp-tf-state-763432567385"
-    key    = "${var.environment}/storage/terraform.tfstate"
-    region = "${var.region}"
-  }
-}
-
-
 resource "databricks_mws_storage_configurations" "this" {
   account_id                  = var.databricks_account_id
   storage_configuration_name  = "dp-${var.environment}-storage"
-  bucket_name                 = data.terraform_remote_state.storage.outputs.databricks_root_bucket
+  bucket_name                 = var.bucket_name
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 
 resource "databricks_mws_credentials" "this" {
   credentials_name = "dp-${var.environment}-credentials"
-  role_arn         = data.terraform_remote_state.iam.outputs.databricks_role_arn
+  role_arn         = var.mws_role_arn
+
+  lifecycle {
+    prevent_destroy = false
+  }
 }
 
 
@@ -47,11 +23,15 @@ resource "databricks_mws_networks" "this" {
   account_id   = var.databricks_account_id
   network_name = "dp-${var.environment}-network"
 
-  vpc_id     = data.terraform_remote_state.network.outputs.vpc_id
-  subnet_ids = data.terraform_remote_state.network.outputs.private_subnet_ids
+  lifecycle {
+    prevent_destroy = false
+  }
+
+  vpc_id     = var.vpc_id
+  subnet_ids = var.private_subnet_ids
 
   security_group_ids = [
-    data.terraform_remote_state.network.outputs.databricks_security_group_id
+    var.security_group_id
   ]
 }
 

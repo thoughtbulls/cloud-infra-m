@@ -1,15 +1,23 @@
-variable "region" {
-  
+variable "environment" {
+  type = string
 }
 
-variable "environment" {
-  
+variable "region" {
+  type = string
 }
 
 variable "vpc_cidr" {
-  default = "10.10.0.0/16"
+  type = string
 }
 
-variable "databricks_account_id" {
-  
+variable "public_subnet_cidr" {
+  type = string
+}
+
+variable "private_subnet_a_cidr" {
+  type = string
+}
+
+variable "private_subnet_b_cidr" {
+  type = string
 }

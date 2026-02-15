@@ -5,31 +5,47 @@ resource "aws_vpc" "main" {
 
   tags = {
     Name = "dp-${var.environment}-vpc"
-    Env = var.environment
+    Env  = var.environment
   }
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
+
+  tags = {
+    Name = "dp-${var.environment}-igw"
+  }
 }
 
 resource "aws_subnet" "public" {
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = "10.10.1.0/24"
+  cidr_block              = var.public_subnet_cidr
   availability_zone       = "${var.region}a"
   map_public_ip_on_launch = true
+
+  tags = {
+    Name = "dp-${var.environment}-public"
+  }
 }
 
 resource "aws_subnet" "private_a" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.10.11.0/24"
+  cidr_block        = var.private_subnet_a_cidr
   availability_zone = "${var.region}a"
+
+  tags = {
+    Name = "dp-${var.environment}-private-a"
+  }
 }
 
 resource "aws_subnet" "private_b" {
   vpc_id            = aws_vpc.main.id
-  cidr_block        = "10.10.12.0/24"
+  cidr_block        = var.private_subnet_b_cidr
   availability_zone = "${var.region}b"
+
+  tags = {
+    Name = "dp-${var.environment}-private-b"
+  }
 }
 
 resource "aws_eip" "nat_eip" {
@@ -39,6 +55,10 @@ resource "aws_eip" "nat_eip" {
 resource "aws_nat_gateway" "nat" {
   allocation_id = aws_eip.nat_eip.id
   subnet_id     = aws_subnet.public.id
+
+  tags = {
+    Name = "dp-${var.environment}-nat"
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -77,15 +97,14 @@ resource "aws_route_table_association" "private_b" {
 }
 
 resource "aws_security_group" "databricks_sg" {
-  name        = "dp-${var.environment}-databricks-sg"
-  description = "Security group for Databricks compute"
-  vpc_id      = aws_vpc.main.id
+  name   = "dp-${var.environment}-databricks-sg"
+  vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    self        = true
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
+    self      = true
   }
 
   egress {
@@ -95,4 +114,3 @@ resource "aws_security_group" "databricks_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
-

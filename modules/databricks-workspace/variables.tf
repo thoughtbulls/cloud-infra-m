@@ -1,11 +1,13 @@
-variable "region" {
-  default = "ap-south-1"
+variable "environment" {}
+variable "region" {}
+variable "databricks_account_id" {}
+
+variable "bucket_name" {}
+variable "mws_role_arn" {}
+
+variable "vpc_id" {}
+variable "private_subnet_ids" {
+  type = list(string)
 }
 
-variable "environment" {
-  
-}
-
-variable "databricks_account_id" {
-    
-}
+variable "security_group_id" {}

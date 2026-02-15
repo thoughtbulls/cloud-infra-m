@@ -1,0 +1,9 @@
+variable "environment" {}
+variable "region" {}
+
+variable "vpc_cidr" {}
+variable "public_subnet_cidr" {}
+variable "private_subnet_a_cidr" {}
+variable "private_subnet_b_cidr" {}
+
+variable "databricks_account_id" {}
