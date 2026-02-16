@@ -5,7 +5,7 @@ resource "databricks_mws_storage_configurations" "this" {
   role_arn                    = var.storage_role_arn
 
   lifecycle {
-    prevent_destroy = var.prevent_destroy
+    prevent_destroy = true
   }
 }
 
@@ -15,7 +15,7 @@ resource "databricks_mws_credentials" "this" {
   role_arn         = var.workspace_role_arn
 
   lifecycle {
-    prevent_destroy = var.prevent_destroy
+    prevent_destroy = true
   }
 }
 
@@ -32,25 +32,12 @@ resource "databricks_mws_networks" "this" {
   ]
 
   lifecycle {
-    prevent_destroy = var.prevent_destroy
+    prevent_destroy = true
   }
 }
 
 
-resource "time_sleep" "wait_for_iam" {
-  create_duration = "90s"
-
-  depends_on = [
-    data.terraform_
-  ]
-}
-
 resource "databricks_mws_workspaces" "workspace" {
-
-  depends_on = [
-    time_sleep.wait_for_iam
-  ]
-
   account_id = var.databricks_account_id
   workspace_name = "dp-${var.environment}-workspace"
   aws_region = var.region
@@ -60,7 +47,7 @@ resource "databricks_mws_workspaces" "workspace" {
   storage_configuration_id = databricks_mws_storage_configurations.this.storage_configuration_id
 
   lifecycle {
-  prevent_destroy = var.prevent_destroy
+  prevent_destroy = true
 
   ignore_changes = [
     workspace_url,

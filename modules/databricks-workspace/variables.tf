@@ -13,6 +13,3 @@ variable "private_subnet_ids" {
 
 variable "security_group_id" {}
 
-variable "prevent_destroy" {
-  type = bool
-}

@@ -37,10 +37,6 @@ resource "time_sleep" "wait_for_iam" {
 module "databricks_workspace" {
   source = "../../modules/databricks-workspace"
 
-  depends_on = [
-    time_sleep.wait_for_iam
-  ]
-
   environment           = var.environment
   region                = var.region
   databricks_account_id = var.databricks_account_id
@@ -52,7 +48,7 @@ module "databricks_workspace" {
   vpc_id                = module.network.vpc_id
   private_subnet_ids    = module.network.private_subnet_ids
   security_group_id     = module.network.security_group_id
-  prevent_destroy       = var.prevent_destroy
+  
 }
 
 

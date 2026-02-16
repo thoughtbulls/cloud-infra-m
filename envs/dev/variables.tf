@@ -7,7 +7,3 @@ variable "private_subnet_a_cidr" {}
 variable "private_subnet_b_cidr" {}
 
 variable "databricks_account_id" {}
-
-variable "prevent_destroy" {
-  
-}
