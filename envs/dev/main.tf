@@ -4,10 +4,10 @@ module "network" {
   environment = var.environment
   region      = var.region
 
-  vpc_cidr              = "10.20.0.0/16"
-  public_subnet_cidr    = "10.20.1.0/24"
-  private_subnet_a_cidr = "10.20.11.0/24"
-  private_subnet_b_cidr = "10.20.12.0/24"
+  vpc_cidr              = var.vpc_cidr
+  public_subnet_cidr    = var.public_subnet_cidr
+  private_subnet_a_cidr = var.private_subnet_a_cidr
+  private_subnet_b_cidr = var.private_subnet_b_cidr
 }
 
 module "storage" {
@@ -25,14 +25,6 @@ module "iam" {
   bucket_arn            = module.storage.bucket_arn
 }
 
-resource "time_sleep" "wait_for_iam" {
-  create_duration = "90s"
-
-  triggers = {
-    storage_role_arn   = module.iam.storage_role_arn
-    workspace_role_arn = module.iam.workspace_role_arn
-  }
-}
 
 module "databricks_workspace" {
   source = "../../modules/databricks-workspace"

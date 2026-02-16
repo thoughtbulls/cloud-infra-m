@@ -1,3 +1,12 @@
+#############################################
+# WAIT FOR IAM PROPAGATION
+#############################################
+
+resource "time_sleep" "wait_for_iam" {
+  create_duration = "60s"
+}
+
+
 resource "databricks_mws_storage_configurations" "this" {
   account_id                  = var.databricks_account_id
   storage_configuration_name  = "dp-${var.environment}-storage"
@@ -5,17 +14,19 @@ resource "databricks_mws_storage_configurations" "this" {
   role_arn                    = var.storage_role_arn
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
 
 resource "databricks_mws_credentials" "this" {
+  depends_on = [time_sleep.wait_for_iam]
+
   credentials_name = "dp-${var.environment}-credentials"
   role_arn         = var.workspace_role_arn
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -32,7 +43,7 @@ resource "databricks_mws_networks" "this" {
   ]
 
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 }
 
@@ -47,7 +58,7 @@ resource "databricks_mws_workspaces" "workspace" {
   storage_configuration_id = databricks_mws_storage_configurations.this.storage_configuration_id
 
   lifecycle {
-  prevent_destroy = true
+  prevent_destroy = false
 
   ignore_changes = [
     workspace_url,
