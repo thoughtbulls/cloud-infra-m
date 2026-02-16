@@ -25,19 +25,34 @@ module "iam" {
   bucket_arn            = module.storage.bucket_arn
 }
 
+resource "time_sleep" "wait_for_iam" {
+  create_duration = "90s"
+
+  triggers = {
+    storage_role_arn   = module.iam.storage_role_arn
+    workspace_role_arn = module.iam.workspace_role_arn
+  }
+}
+
 module "databricks_workspace" {
   source = "../../modules/databricks-workspace"
+
+  depends_on = [
+    time_sleep.wait_for_iam
+  ]
 
   environment           = var.environment
   region                = var.region
   databricks_account_id = var.databricks_account_id
 
   bucket_name           = module.storage.bucket_name
-  mws_role_arn          = module.iam.mws_role_arn
+  workspace_role_arn    = module.iam.workspace_role_arn
+  storage_role_arn      = module.iam.storage_role_arn
 
   vpc_id                = module.network.vpc_id
   private_subnet_ids    = module.network.private_subnet_ids
   security_group_id     = module.network.security_group_id
+  prevent_destroy       = var.prevent_destroy
 }
 
 
