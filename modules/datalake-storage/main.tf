@@ -4,14 +4,23 @@ resource "random_id" "bucket" {
 
 resource "aws_s3_bucket" "datalake_root" {
   bucket = "dp-${var.environment}-datalake-root-${random_id.bucket.hex}"
-  region = var.region
-  force_destroy = true
+  force_destroy = var.environment != "prod"
 
   tags = {
     Purpose = "datalake-root"
     Env     = var.environment
   }
 }
+
+resource "aws_s3_bucket_public_access_block" "datalake_root" {
+  bucket = aws_s3_bucket.datalake_root.id
+
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
+  restrict_public_buckets = true
+}
+
 
 resource "aws_s3_bucket_ownership_controls" "ownership" {
   bucket = aws_s3_bucket.datalake_root.id
