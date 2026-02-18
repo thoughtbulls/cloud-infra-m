@@ -6,8 +6,12 @@ output "storage_role_arn" {
   value = module.iam.storage_role_arn
 }
 
-output "bucket_name" {
-  value = module.storage.bucket_name
+output "workspace_bucket_name" {
+  value = module.workspace-storage.workspace_bucket_name
+}
+
+output "datalake_bucket_name" {
+  value = module.datalake-storage.datalake_bucket_name
 }
 
 output "vpc_id" {

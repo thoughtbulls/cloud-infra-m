@@ -196,7 +196,7 @@ resource "aws_iam_policy" "databricks_storage_policy" {
       {
         Effect   = "Allow"
         Action   = ["s3:ListBucket"]
-        Resource = var.bucket_arn
+        Resource = var.workspace_bucket_arn
       },
       {
         Effect = "Allow"
@@ -206,7 +206,7 @@ resource "aws_iam_policy" "databricks_storage_policy" {
           "s3:DeleteObject",
           "s3:PutObjectAcl"
         ]
-        Resource = "${var.bucket_arn}/*"
+        Resource = "${var.workspace_bucket_arn}/*"
       }
     ]
   })

@@ -10,8 +10,15 @@ module "network" {
   private_subnet_b_cidr = var.private_subnet_b_cidr
 }
 
-module "storage" {
-  source = "../../modules/storage"
+module "workspace-storage" {
+  source = "../../modules/workspace-storage"
+
+  region = var.region
+  environment = var.environment
+}
+
+module "datalake-storage" {
+  source = "../../modules/datalake-storage"
 
   region = var.region
   environment = var.environment
@@ -22,7 +29,7 @@ module "iam" {
 
   environment           = var.environment
   databricks_account_id = var.databricks_account_id
-  bucket_arn            = module.storage.bucket_arn
+  workspace_bucket_arn  = module.workspace-storage.workspace_bucket_arn
 }
 
 
@@ -33,7 +40,7 @@ module "databricks_workspace" {
   region                = var.region
   databricks_account_id = var.databricks_account_id
 
-  bucket_name           = module.storage.bucket_name
+  bucket_name           = module.workspace-storage.workspace_bucket_name
   workspace_role_arn    = module.iam.workspace_role_arn
   storage_role_arn      = module.iam.storage_role_arn
 

@@ -6,6 +6,6 @@ variable "databricks_account_id" {
   
 }
 
-variable "bucket_arn" {
+variable "workspace_bucket_arn" {
   type = string
 }
