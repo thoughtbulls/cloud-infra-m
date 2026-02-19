@@ -1,10 +1,11 @@
 #############################################################################################
-# using specifically terraforms's databricks provider to create databricks resources 
+# inputs which require to create resources. they are passed from root module and others
 #############################################################################################
-terraform {
-  required_providers {
-    databricks = {
-      source = "databricks/databricks"
-    }
-  }
+
+variable "region" {
+  
+}
+
+variable "environment" {
+ 
 }
