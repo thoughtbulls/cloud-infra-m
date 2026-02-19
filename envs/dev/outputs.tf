@@ -1,3 +1,6 @@
+#############################################################################################
+# outputs of created resources which which will be exposed to monitor of state
+#############################################################################################
 output "workspace_role_arn" {
   value = module.iam.workspace_role_arn
 }

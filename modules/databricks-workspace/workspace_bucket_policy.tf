@@ -1,3 +1,7 @@
+###############################################################
+# workspace bucket policy to allow databricks account root
+###############################################################
+
 resource "aws_s3_bucket_policy" "workspace_root_policy" {
   bucket = var.workspace_bucket_name
 

@@ -1,3 +1,7 @@
+#############################################################################################
+# outputs of created resources which will be used in root outputs and other modules as input
+#############################################################################################
+
 output "workspace_role_arn" {
   value = aws_iam_role.databricks_workspace_role.arn
 }

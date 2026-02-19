@@ -1,7 +1,13 @@
+#############################################################################################
+# generate random id to create unique bucket id
+#############################################################################################
 resource "random_id" "bucket" {
   byte_length = 4
 }
 
+#############################################################################################
+# creating workspace root bucket
+#############################################################################################
 resource "aws_s3_bucket" "workspace_root" {
   bucket = "dp-${var.environment}-workspace-root-${random_id.bucket.hex}"
   force_destroy = true
@@ -12,6 +18,9 @@ resource "aws_s3_bucket" "workspace_root" {
   }
 }
 
+#############################################################################################
+# block public access to workspace bucket 
+#############################################################################################
 resource "aws_s3_bucket_public_access_block" "workspace_root" {
   bucket = aws_s3_bucket.workspace_root.id
 
@@ -21,6 +30,9 @@ resource "aws_s3_bucket_public_access_block" "workspace_root" {
   restrict_public_buckets = true
 }
 
+#############################################################################################
+# provide ownership as BucketOwnerPreferred from BucketOwnerEnforced
+#############################################################################################
 resource "aws_s3_bucket_ownership_controls" "ownership" {
   bucket = aws_s3_bucket.workspace_root.id
 
@@ -29,6 +41,9 @@ resource "aws_s3_bucket_ownership_controls" "ownership" {
   }
 }
 
+#############################################################################################
+# versioning of bucket
+#############################################################################################
 resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.workspace_root.id
 
@@ -37,6 +52,9 @@ resource "aws_s3_bucket_versioning" "versioning" {
   }
 }
 
+#############################################################################################
+# default encryption applied on objects in bucket
+#############################################################################################
 resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
   bucket = aws_s3_bucket.workspace_root.id
 

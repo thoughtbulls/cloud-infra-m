@@ -1,6 +1,6 @@
-########################################
+#############################################################################################
 # Storage datalake IAM Policy
-########################################
+#############################################################################################
 resource "aws_iam_policy" "databricks_storage_policy" {
   name = "dp-${var.environment}-databricks-storage-policy"
 
@@ -26,9 +26,9 @@ resource "aws_iam_policy" "databricks_storage_policy" {
   })
 }
 
-########################################
+#############################################################################################
 # Storage role and policy attachment
-########################################
+#############################################################################################
 resource "aws_iam_role_policy_attachment" "storage_role_attach_policy" {
   role       = aws_iam_role.databricks_storage_role.name
   policy_arn = aws_iam_policy.databricks_storage_policy.arn

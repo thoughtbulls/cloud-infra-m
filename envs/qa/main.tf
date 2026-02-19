@@ -1,3 +1,8 @@
+#############################################################################################
+# register all modules in root module
+#############################################################################################
+
+# network module
 module "network" {
   source = "../../modules/network"
 
@@ -10,6 +15,7 @@ module "network" {
   private_subnet_b_cidr = var.private_subnet_b_cidr
 }
 
+# workspace storage module
 module "workspace-storage" {
   source = "../../modules/workspace-storage"
 
@@ -17,6 +23,7 @@ module "workspace-storage" {
   environment = var.environment
 }
 
+# datalake storage module
 module "datalake-storage" {
   source = "../../modules/datalake-storage"
 
@@ -24,6 +31,7 @@ module "datalake-storage" {
   environment = var.environment
 }
 
+# iam module
 module "iam" {
   source = "../../modules/iam"
 
@@ -36,7 +44,7 @@ module "iam" {
   datalake_bucket_arn  = module.datalake-storage.datalake_bucket_arn
 }
 
-
+# databricks workspace module
 module "databricks_workspace" {
   source = "../../modules/databricks-workspace"
 

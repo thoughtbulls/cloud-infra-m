@@ -1,7 +1,13 @@
+#############################################################################################
+# generate random id to create unique bucket id
+#############################################################################################
 resource "random_id" "bucket" {
   byte_length = 4
 }
 
+#############################################################################################
+# creating deltalake root bucket
+#############################################################################################
 resource "aws_s3_bucket" "datalake_root" {
   bucket = "dp-${var.environment}-datalake-root-${random_id.bucket.hex}"
   force_destroy = var.environment != "prod"
@@ -12,6 +18,9 @@ resource "aws_s3_bucket" "datalake_root" {
   }
 }
 
+#############################################################################################
+# block public access to datalake bucket 
+#############################################################################################
 resource "aws_s3_bucket_public_access_block" "datalake_root" {
   bucket = aws_s3_bucket.datalake_root.id
 
@@ -21,7 +30,9 @@ resource "aws_s3_bucket_public_access_block" "datalake_root" {
   restrict_public_buckets = true
 }
 
-
+#############################################################################################
+# provide ownership as BucketOwnerPreferred from BucketOwnerEnforced
+#############################################################################################
 resource "aws_s3_bucket_ownership_controls" "ownership" {
   bucket = aws_s3_bucket.datalake_root.id
 
@@ -30,6 +41,9 @@ resource "aws_s3_bucket_ownership_controls" "ownership" {
   }
 }
 
+#############################################################################################
+# provide access to write acls
+#############################################################################################
 resource "aws_s3_bucket_acl" "databricks_root_acl" {
   bucket = aws_s3_bucket.datalake_root.id
   acl    = "private"
@@ -39,7 +53,9 @@ resource "aws_s3_bucket_acl" "databricks_root_acl" {
   ]
 }
 
-
+#############################################################################################
+# versioning of bucket
+#############################################################################################
 resource "aws_s3_bucket_versioning" "versioning" {
   bucket = aws_s3_bucket.datalake_root.id
 
@@ -48,6 +64,9 @@ resource "aws_s3_bucket_versioning" "versioning" {
   }
 }
 
+#############################################################################################
+# default encryption applied on objects in bucket
+#############################################################################################
 resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
   bucket = aws_s3_bucket.datalake_root.id
 
