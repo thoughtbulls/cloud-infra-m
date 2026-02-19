@@ -1,3 +1,7 @@
+#############################################################################################
+# outputs of created resources which will be used in root outputs and other modules as input
+#############################################################################################
+
 output "vpc_id" {
   value = aws_vpc.main.id
 }

@@ -1,3 +1,7 @@
+#############################################################################################
+# outputs of created resources which will be used in root outputs and other modules as input
+#############################################################################################
+
 output "workspace_url" {
   value = databricks_mws_workspaces.workspace.workspace_url
 }

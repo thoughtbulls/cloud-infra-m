@@ -2,14 +2,10 @@
 # outputs of created resources which will be used in root outputs and other modules as input
 #############################################################################################
 
-output "workspace_role_arn" {
-  value = aws_iam_role.databricks_workspace_role.arn
+output "datalake_bucket_name" {
+  value = aws_s3_bucket.datalake_root.id
 }
 
-output "storage_role_arn" {
-  value = aws_iam_role.databricks_storage_role.arn
-}
-
-output "workspace_role_policy_attachment_id" {
-  value = aws_iam_role_policy_attachment.workspace_role_attach_policy.id
+output "datalake_bucket_arn" {
+  value = aws_s3_bucket.datalake_root.arn
 }
