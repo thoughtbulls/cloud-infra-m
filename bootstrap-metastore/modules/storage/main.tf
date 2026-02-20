@@ -8,21 +8,21 @@ resource "random_id" "bucket" {
 #############################################################################################
 # creating deltalake root bucket
 #############################################################################################
-resource "aws_s3_bucket" "datalake_root" {
-  bucket = "dp-${var.environment}-datalake-root-${random_id.bucket.hex}"
+resource "aws_s3_bucket" "uc" {
+  bucket = "dp-${var.environment}-uc-${random_id.bucket.hex}"
   force_destroy = true
 
   tags = {
-    Purpose = "datalake-root"
+    Purpose = "unity catalog"
     Env     = var.environment
   }
 }
 
 #############################################################################################
-# block public access to datalake bucket 
+# block public access to unity catalog bucket 
 #############################################################################################
-resource "aws_s3_bucket_public_access_block" "datalake_root" {
-  bucket = aws_s3_bucket.datalake_root.id
+resource "aws_s3_bucket_public_access_block" "uc" {
+  bucket = aws_s3_bucket.uc.id
 
   block_public_acls       = true
   block_public_policy     = true
@@ -34,30 +34,19 @@ resource "aws_s3_bucket_public_access_block" "datalake_root" {
 # provide ownership as BucketOwnerPreferred from BucketOwnerEnforced
 #############################################################################################
 resource "aws_s3_bucket_ownership_controls" "ownership" {
-  bucket = aws_s3_bucket.datalake_root.id
+  bucket = aws_s3_bucket.uc.id
 
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
 }
 
-#############################################################################################
-# provide access to write acls
-#############################################################################################
-resource "aws_s3_bucket_acl" "databricks_root_acl" {
-  bucket = aws_s3_bucket.datalake_root.id
-  acl    = "private"
-
-  depends_on = [
-    aws_s3_bucket_ownership_controls.ownership
-  ]
-}
 
 #############################################################################################
 # versioning of bucket
 #############################################################################################
 resource "aws_s3_bucket_versioning" "versioning" {
-  bucket = aws_s3_bucket.datalake_root.id
+  bucket = aws_s3_bucket.uc.id
 
   versioning_configuration {
     status = "Enabled"
@@ -68,7 +57,7 @@ resource "aws_s3_bucket_versioning" "versioning" {
 # default encryption applied on objects in bucket
 #############################################################################################
 resource "aws_s3_bucket_server_side_encryption_configuration" "encryption" {
-  bucket = aws_s3_bucket.datalake_root.id
+  bucket = aws_s3_bucket.uc.id
 
   rule {
     apply_server_side_encryption_by_default {
