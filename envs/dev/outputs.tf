@@ -28,3 +28,7 @@ output "workspace_url" {
 output "workspace_id" {
   value = module.databricks_workspace.workspace_id
 }
+
+output "metastore_id" {
+  value = module.metastore.metastore_id
+}

@@ -14,3 +14,5 @@ variable "databricks_account_root_arn" {
   description = "Databricks AWS account root ARN"
   type        = string
 }
+
+variable "metastore_name" {}
