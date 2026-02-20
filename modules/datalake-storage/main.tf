@@ -10,7 +10,7 @@ resource "random_id" "bucket" {
 #############################################################################################
 resource "aws_s3_bucket" "datalake_root" {
   bucket = "dp-${var.environment}-datalake-root-${random_id.bucket.hex}"
-  force_destroy = var.environment != "prod"
+  force_destroy = true
 
   tags = {
     Purpose = "datalake-root"

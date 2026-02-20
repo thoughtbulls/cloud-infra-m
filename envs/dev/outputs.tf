@@ -24,3 +24,7 @@ output "vpc_id" {
 output "workspace_url" {
   value = module.databricks_workspace.workspace_url
 }
+
+output "workspace_id" {
+  value = module.databricks_workspace.workspace_id
+}
