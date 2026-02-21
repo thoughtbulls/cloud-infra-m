@@ -1,8 +1,8 @@
 #############################################################################################
-# Storage datalake IAM Policy
+# Storage unity catalog IAM Policy
 #############################################################################################
-resource "aws_iam_policy" "databricks_storage_policy" {
-  name = "dp-${var.environment}-databricks-storage-policy"
+resource "aws_iam_policy" "uc_storage_policy" {
+  name = "dp-${var.environment}-uc-storage-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -10,7 +10,7 @@ resource "aws_iam_policy" "databricks_storage_policy" {
       {
         Effect   = "Allow"
         Action   = ["s3:ListBucket"]
-        Resource = var.datalake_bucket_arn
+        Resource = var.uc_bucket_arn
       },
       {
         Effect = "Allow"
@@ -20,7 +20,7 @@ resource "aws_iam_policy" "databricks_storage_policy" {
           "s3:DeleteObject",
           "s3:PutObjectAcl"
         ]
-        Resource = "${var.datalake_bucket_arn}/*"
+        Resource = "${var.uc_bucket_arn}/*"
       }
     ]
   })
@@ -30,6 +30,6 @@ resource "aws_iam_policy" "databricks_storage_policy" {
 # Storage role and policy attachment
 #############################################################################################
 resource "aws_iam_role_policy_attachment" "storage_role_attach_policy" {
-  role       = aws_iam_role.databricks_storage_role.name
-  policy_arn = aws_iam_policy.databricks_storage_policy.arn
+  role       = aws_iam_role.uc_storage_role.name
+  policy_arn = aws_iam_policy.uc_storage_policy.arn
 }

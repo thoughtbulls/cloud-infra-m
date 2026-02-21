@@ -23,14 +23,6 @@ module "workspace-storage" {
   environment = var.environment
 }
 
-# datalake storage module
-module "datalake-storage" {
-  source = "../../modules/datalake-storage"
-
-  region      = var.region
-  environment = var.environment
-}
-
 # iam module
 module "iam" {
   source = "../../modules/iam"
@@ -41,13 +33,12 @@ module "iam" {
   databricks_account_root_arn = var.databricks_account_root_arn
 
   workspace_bucket_arn = module.workspace-storage.workspace_bucket_arn
-  datalake_bucket_arn  = module.datalake-storage.datalake_bucket_arn
 }
 
 # databricks workspace module
 module "databricks_workspace" {
-  source = "../../modules/databricks-workspace"
-
+  source         = "../../modules/databricks-workspace"
+  
   iam_dependency = module.iam.workspace_role_policy_attachment_id
 
   environment                 = var.environment
@@ -64,6 +55,13 @@ module "databricks_workspace" {
   private_subnet_ids = module.network.private_subnet_ids
   security_group_id  = module.network.security_group_id
 
+}
+
+module "metastore_assignment" {
+  source = "../../modules/metastore-assignment"
+
+  workspace_id = local.workspace_id
+  metastore_id = local.metastore_id
 }
 
 
