@@ -13,10 +13,6 @@ output "workspace_bucket_name" {
   value = module.workspace-storage.workspace_bucket_name
 }
 
-output "datalake_bucket_name" {
-  value = module.datalake-storage.datalake_bucket_name
-}
-
 output "vpc_id" {
   value = module.network.vpc_id
 }
