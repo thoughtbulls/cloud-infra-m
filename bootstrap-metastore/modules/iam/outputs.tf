@@ -3,7 +3,7 @@
 #############################################################################################
 
 
-output "storage_role_arn" {
+output "uc_storage_role_arn" {
   value = aws_iam_role.uc_storage_role.arn
 }
 
